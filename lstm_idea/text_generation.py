@@ -39,7 +39,7 @@ for i in range(0, len(text) - maxlen, step):
 print('nb sequences:', len(sentences))
 
 print('Vectorization...')
-x = np.zeros((len(sentences), maxlen), dtype=np.bool)
+x = np.zeros((len(sentences), maxlen), dtype=np.int32)
 y = np.zeros((len(sentences), len(chars)), dtype=np.bool)
 for i, sentence in enumerate(sentences):
 	for t, char in enumerate(sentence):
@@ -124,9 +124,11 @@ for iteration in range(1, 60):
 		for i in range(400):
 			x_pred = np.zeros((1, maxlen))
 			#change x_pred to account for divide and conquer architecture
-			x_pred = np.split(x_pred, 100, axis=1)
+			
 			for t, char in enumerate(sentence):
 				x_pred[0,t] = char_indices[char]
+			
+			x_pred = np.split(x_pred, 100, axis=1)
 			preds = model.predict(x_pred, verbose=0)[0]
 			next_index = sample(preds, diversity)
 			next_char = indices_char[next_index]
